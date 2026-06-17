@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Letter For You</title>
+  <meta name="description"
+    content="A beautiful, interactive romantic letter envelope for someone special. Open it to read a personal letter.">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+    rel="stylesheet">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <!-- Floating Hearts Background Canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Audio Controls Panel -->
+  <div class="audio-panel">
+    <button id="toggle-music" class="audio-btn" aria-label="Toggle Music" title="Toggle Music">
+      <!-- Music On SVG (Default Muted, will show toggle state) -->
+      <svg class="icon icon-music-on" viewBox="0 0 24 24" width="24" height="24">
+        <path fill="currentColor"
+          d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h6V3h-8zm-2 16c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
+      </svg>
+      <svg class="icon icon-music-off hidden" viewBox="0 0 24 24" width="24" height="24">
+        <path fill="currentColor"
+          d="M4.27 3L3 4.27l9 9v.28c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4v-1.73l5.73 5.73L21 19.73 4.27 3zM10 19c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4-12h4V3h-6v3.18l2 2V7z" />
+      </svg>
+    </button>
+    <button id="toggle-sfx" class="audio-btn" aria-label="Toggle Sound Effects" title="Toggle Sound Effects">
+      <!-- Sound On SVG -->
+      <svg class="icon icon-sfx-on" viewBox="0 0 24 24" width="24" height="24">
+        <path fill="currentColor"
+          d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+      </svg>
+      <svg class="icon icon-sfx-off hidden" viewBox="0 0 24 24" width="24" height="24">
+        <path fill="currentColor"
+          d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Main Application Container -->
+  <main class="app-container">
+    <div class="content-wrapper">
+
+      <!-- Interactive Envelope -->
+      <div class="envelope-outer" id="envelope-interactive">
+        <div class="envelope">
+          <!-- Back inside of the envelope -->
+          <div class="envelope-back"></div>
+
+          <!-- The Letter Inside (slides up) -->
+          <div class="envelope-letter" id="envelope-letter-preview">
+            <div class="letter-preview-card">
+              <div class="letter-preview-line short"></div>
+              <div class="letter-preview-line"></div>
+              <div class="letter-preview-line"></div>
+              <div class="letter-preview-heart">❤</div>
+            </div>
+          </div>
+
+          <!-- Front left, right, and bottom flaps -->
+          <div class="envelope-pocket"></div>
+
+          <!-- Top folding flap -->
+          <div class="envelope-flap" id="envelope-flap"></div>
+
+          <!-- Heart Seal (Click to Open) -->
+          <button class="envelope-seal" id="envelope-seal" aria-label="Open Letter">
+            <span class="seal-heart">❤</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Pulsing Instruction Text -->
+      <div class="instruction-container" id="instruction-text">
+        <p class="instruction-tap">Tap the heart to open</p>
+        <span class="instruction-sub">A letter for you is waiting inside</span>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Expanded Full Letter View Overlay -->
+  <div class="letter-overlay has-image" id="letter-overlay">
+    <div class="letter-modal">
+      <div class="letter-paper">
+        <!-- Accent decorative corners -->
+        <div class="corner-decor top-left"></div>
+        <div class="corner-decor top-right"></div>
+        <div class="corner-decor bottom-left"></div>
+        <div class="corner-decor bottom-right"></div>
+
+        <!-- Letter Content Wrapper -->
+        <div class="letter-content-scroll">
+
+          <!-- Standard Text-based Cursive Letter (Default) -->
+          <!-- Note: To use an image instead, see the commented section below or uncomment it -->
+          <div class="letter-text-content" id="letter-text-body">
+            <h1 class="letter-title">My Dearest,</h1>
+            <p>I wanted to take a moment to write down what has been in my heart for so long. Every single day with you
+              is a gift, and every moment we share is a memory I treasure deeply.</p>
+            <p>Thank you for your warmth, your laughter, your kindness, and the effortless way you bring light into my
+              world. You have a beautiful soul, and being loved by you is one of the greatest blessings of my life.</p>
+            <p>No matter where life takes us, my heart belongs with you. Today, tomorrow, and for all the days that
+              follow, I will love you.</p>
+            <p class="letter-signoff">Yours always,</p>
+            <p class="letter-signature">Akshay</p>
+          </div>
+
+          <!-- Image-based Letter container (Hidden by default, easy to enable) -->
+          <!-- To use your custom image:
+               1. Drop your image (e.g. letter.png) in this directory.
+               2. Set the src attribute below to your image path.
+               3. Add the class "has-image" to the #letter-overlay element. -->
+          <div class="letter-image-content" id="letter-image-container">
+            <img id="custom-letter-img" src="img/IMG_20260615_004919.jpg" alt="Handwritten Letter for you">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Overlay Action Buttons -->
+      <div class="letter-actions">
+        <button id="btn-read-again" class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path
+              d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+          </svg>
+          Read Again
+        </button>
+        <button id="btn-close-letter" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path
+              d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+          </svg>
+          Close Letter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+
+</html>
